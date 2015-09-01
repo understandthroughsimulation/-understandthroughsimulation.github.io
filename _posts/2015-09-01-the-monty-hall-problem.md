@@ -17,9 +17,9 @@ It turns out that it is to your advantage to switch your choice. To
 understand, let's begin simulating!
 
 First, there's 3 doors:
-
+``
     doors = c(1,2,3)
-
+``
 There's a door we pick, and a door with the car.
 
     # The sample(data,n) function will randomly select n items from data
