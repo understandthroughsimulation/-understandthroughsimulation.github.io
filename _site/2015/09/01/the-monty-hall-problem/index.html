@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      The Monty Hall Problem &middot; Understand Through Simulation
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/styles.css">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/atom+xml" title="Understand Through Simulation" href="/atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-146052-15', 'getpoole.com');
+    ga('send', 'pageview');
+  </script>
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h2 class="masthead-title">
+          <a href="/" title="Home">Understand Through Simulation</a>
+          <br>
+          <small>An attempt at better understanding things... by simulating them.</small>
+        </h2>
+      </header>
+
+      <main>
+        <article class="post">
+  <h1 class="post-title">The Monty Hall Problem</h1>
+  <time datetime="2015-09-01T00:00:00+02:00" class="post-date">01 Sep 2015</time>
+  <p>The Monty Hall problem is a somewhat confusing one. From
+<a href="https://en.wikipedia.org/wiki/Monty_Hall_problem">Wikipedia</a>, it can be
+described as the following:</p>
+
+<p>Suppose you’re on a game show, and you’re given the choice of three
+doors: Behind one door is a car; behind the others, goats. You pick a
+door, say No. 1, and the host, who knows what’s behind the doors, opens
+another door, say No. 3, which has a goat. He then says to you, “Do you
+want to pick door No. 2?” Is it to your advantage to switch your choice?</p>
+
+<p>It turns out that it is to your advantage to switch your choice. To
+understand, let’s begin simulating!</p>
+
+<p>First, there’s 3 doors:</p>
+
+<pre><code>doors = c(1,2,3)
+</code></pre>
+
+<p>There’s a door we pick, and a door with the car.</p>
+
+<pre><code># The sample(data,n) function will randomly select n items from data
+pick = sample(doors,1)
+car = sample(doors,1)
+</code></pre>
+
+<p>The goat door is one of the doors that isn’t the one we picked and isn’t
+the one with the car.</p>
+
+<pre><code>goat = sample(doors[! doors %in% c(pick,car)],1)
+</code></pre>
+
+<p>Now let’s check if the door we picked is the one with the car</p>
+
+<pre><code>pick == car
+
+## [1] FALSE
+</code></pre>
+
+<p>Alright, well… if you actually picked the car or not it doesn’t really
+matter. It’s not about doing this just once. We want to know which is
+more likely. Lets try this again but lets run this problem 100 times.</p>
+
+<pre><code>pickedCar = c()
+doors = c(1,2,3)
+for (i in 1:100) {
+  pick = sample(doors,1)
+  car = sample(doors,1)
+  goat = sample(doors[! doors %in% c(pick,car)],1)
+  pickedCar[i] = pick == car
+}
+</code></pre>
+
+<p>Ok, let’s see it…How many times did I pick the right door?</p>
+
+<pre><code>sum(pickedCar)/length(pickedCar)*100
+
+## [1] 35
+</code></pre>
+
+<p>What?! That can’t be true! Lets try 10,000 times.</p>
+
+<pre><code>doors = c(1,2,3)
+for (i in 1:10000) {
+  pick = sample(doors,1)
+  car = sample(doors,1)
+  goat = sample(doors[! doors %in% c(pick,car)],1)
+  pickedCar[i] = pick == car
+}
+</code></pre>
+
+<p>And here we are…</p>
+
+<pre><code>sum(pickedCar)/length(pickedCar)*100
+
+## [1] 33.16
+</code></pre>
+
+<p>Okay. So what’s going on here? The more times we run this, the closer we
+get to 33.33..% but why’s that? Well, it turns out that the chance of
+car being in the other door is 2/3 and it being in the door you picked
+is 1/3. Let’s dive deeper.</p>
+
+<p>When we first started, the odds of each door was 1/3 each. You knew if
+you picked door number 1 you had a 1 in 3 chance of getting the car. You
+also knew that there’s a 2/3 chance that you don’t get the car. What
+that means is that there’s a 2/3 chance of the car being behind door
+number 2 or door number 3. Now when we prove that door number 3 has a
+goat behind it, the chance of the car being behind door number 2 or 3
+hasn’t changed! Your knowledge has changed but the system hasn’t.</p>
+
+<p>It’s still 1/3 chance the car is behind door number 1 and 2/3 chance
+it’s not which means that it’s a 1/3 chance you picked correctly and a
+2/3 chance you didn’t. Switching to the other door means that your
+chance of being correct is now 2/3 (just like the simulation shows).</p>
+
+<p>Alright, that’s it for this post on the Monty Hall problem. Let me know
+if you have any questions in the comments section below. Also let me
+know if there’s other problems you would like to understand through
+simulation!</p>
+
+<p>Till next time.</p>
+
+</article>
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'stonly';
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2015-09-01T04:30:38+02:00">2015</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+  </body>
+</html>
