@@ -21,11 +21,14 @@ First, there's 3 doors:
 ``
     doors = c(1,2,3)
 ``
+
 There's a door we pick, and a door with the car.
 
 ``
     # The sample(data,n) function will randomly select n items from data
+    
     pick = sample(doors,1)
+    
     car = sample(doors,1)
 ``
 
@@ -52,12 +55,19 @@ more likely. Lets try this again but lets run this problem 100 times.
 
 ``
     pickedCar = c()
+    
     doors = c(1,2,3)
+    
     for (i in 1:100) {
+    
       pick = sample(doors,1)
+    
       car = sample(doors,1)
+    
       goat = sample(doors[! doors %in% c(pick,car)],1)
+    
       pickedCar[i] = pick == car
+    
     }
 ``
 
@@ -75,11 +85,17 @@ What?! That can't be true! Lets try 10,000 times.
 
 ``
     doors = c(1,2,3)
+    
     for (i in 1:10000) {
+    
       pick = sample(doors,1)
+    
       car = sample(doors,1)
+    
       goat = sample(doors[! doors %in% c(pick,car)],1)
+    
       pickedCar[i] = pick == car
+    
     }
 ``
 
